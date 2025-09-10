@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Auto Update IP Monitor</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="logo">
+        <img src="/asset/media/yourlogo.jpg" alt="Auto Update IP Logo" />
+      </div>
+      <h1>Auto Update IP</h1>
+      <p class="subtitle">Monitor địa chỉ IP hiện tại</p>
+
+      <div class="ip-display">
+        <div class="ip-label">Địa chỉ IP hiện tại</div>
+        <div class="ip-value" id="current-ip">Đang tải...</div>
+      </div>
+
+      <div class="status disconnected" id="connection-status">
+        <div class="status-dot"></div>
+        <span>Đang kết nối...</span>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3>Domains</h3>
+          <p id="domain-count">-</p>
+        </div>
+        <div class="info-card">
+          <h3>Trạng thái</h3>
+          <p id="update-status">Chờ dữ liệu</p>
+        </div>
+      </div>
+
+      <button class="refresh-btn" onclick="refreshConnection()">🔄 Kết nối lại</button>
+
+      <div class="last-update" id="last-update">Cập nhật lần cuối: Chưa có dữ liệu</div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

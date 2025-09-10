@@ -1,0 +1,42 @@
+services:
+  autoupdateip:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: AutoUpdateIP
+    restart: unless-stopped
+    ports:
+      - "1501:1501" # HTTP Server port
+      - "1500:1500" # WebSocket Server port
+    volumes:
+      # Mount config directory để có thể chỉnh sửa config từ bên ngoài
+      - ./asset/config:/app/asset/config
+      # Mount logs directory nếu cần lưu log
+      - ./logs:/app/logs
+    environment:
+      - NODE_ENV=production
+      - TZ=Asia/Ho_Chi_Minh # Thiết lập timezone
+    networks:
+      - autoupdateip-network
+    # Health check
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "const ws = require('ws'); const client = new ws('ws://localhost:1500'); client.on('open', () => { client.close(); process.exit(0); }); client.on('error', () => process.exit(1));",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  autoupdateip-network:
+    driver: bridge
+
+# Optional: Thêm volume cho data persistence
+volumes:
+  app-logs:
+    driver: local

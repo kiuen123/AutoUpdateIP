@@ -1,19 +1,20 @@
 {
-    "dependencies": {
-        "axios": "^1.10.0",
-        "dns2": "^2.1.0",
-        "jsonfile": "^6.1.0",
-        "nodemon": "^3.1.10",
-        "ws": "^8.18.3"
-    },
-    "type": "module",
-    "name": "auto_update_ip",
-    "version": "1.0.5",
-    "main": "index.js",
-    "scripts": {
-        "start": "npm update --save && npm install && nodemon index.js"
-    },
-    "author": "KienNT",
-    "license": "ISC",
-    "description": "auto update ip address"
+  "dependencies": {
+    "axios": "^1.11.0",
+    "dns2": "^2.1.0",
+    "express": "^4.21.2",
+    "jsonfile": "^6.2.0",
+    "nodemon": "^3.1.10",
+    "ws": "^8.18.3"
+  },
+  "type": "module",
+  "name": "auto_update_ip",
+  "version": "1.0.5",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm update --save && npm install && nodemon index.js"
+  },
+  "author": "KienNT",
+  "license": "ISC",
+  "description": "auto update ip address"
 }

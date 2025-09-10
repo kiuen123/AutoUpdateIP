@@ -5,7 +5,7 @@ export const getNewIPAddress = async () => {
 		axios
 			.get('https://api.ipify.org/?format=json')
 			.then(({ data }) => {
-				console.log(`IP address: ${data.ip}`);
+				// console.log(`IP address: ${data.ip}`);
 				resolve(data.ip);
 			})
 			.catch((error) => {

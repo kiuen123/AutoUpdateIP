@@ -7,7 +7,7 @@ export const checkConnection = async () => {
 			if (err) {
 				reject(new Error('No internet connection'));
 			} else {
-				console.log(`Connected to the internet`);
+				// console.log(`Connected to the internet`);
 				resolve(true);
 			}
 		});
