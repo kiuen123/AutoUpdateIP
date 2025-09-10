@@ -3,10 +3,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: AutoUpdateIP
+    container_name: app
     restart: unless-stopped
     ports:
-      - "1501:1501" # HTTP Server port
+      - "1499:1499" # HTTP Server port
       - "1500:1500" # WebSocket Server port
     volumes:
       # Mount config directory để có thể chỉnh sửa config từ bên ngoài

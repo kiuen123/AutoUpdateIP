@@ -17,7 +17,7 @@ COPY . .
 RUN mkdir -p asset/config
 
 # Expose port cho WebSocket Server và HTTP Server
-EXPOSE 1500 1501
+EXPOSE 1499 1500
 
 # Health check để kiểm tra container có hoạt động không
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

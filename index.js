@@ -15,7 +15,7 @@ let newIP = null; // new IP
 let updateIntervalMinutes = 5; // thời gian update IP (phút)
 const updateIntervalMs = 60 * 1000 * updateIntervalMinutes; // đổi phút sang mili giây
 const wsPort = 1500; // cổng WebSocket Server
-const httpPort = 1501; // cổng HTTP Server
+const httpPort = 1499; // cổng HTTP Server
 const wss = new WebSocketServer({ port: wsPort }); // tạo WebSocket Server
 
 // Tạo Express app để phục vụ trang web
