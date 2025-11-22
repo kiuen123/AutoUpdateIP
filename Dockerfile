@@ -16,12 +16,12 @@ COPY . .
 # Tạo thư mục cho config nếu chưa có
 RUN mkdir -p asset/config
 
-# Expose port cho WebSocket Server và HTTP Server
-EXPOSE 1499 1500
+# Expose port cho HTTP Server
+EXPOSE 1499
 
 # Health check để kiểm tra container có hoạt động không
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node -e "const ws = require('ws'); const client = new ws('ws://localhost:1500'); client.on('open', () => { client.close(); process.exit(0); }); client.on('error', () => process.exit(1));" || exit 1
+  CMD wget --spider -q http://localhost:1499/api/ip || exit 1
 
 # Chạy ứng dụng
 CMD ["npm", "start"]

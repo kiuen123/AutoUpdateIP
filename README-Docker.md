@@ -45,15 +45,16 @@ docker build -t autoupdateip .
 # Chạy container
 docker run -d \
   --name autoupdateip-app \
-  -p 1500:1500 \
+  -p 1499:1499 \
   -v $(pwd)/asset/config:/app/asset/config \
   autoupdateip
 ```
 
 ### 3. Kiểm tra hoạt động
 
-- WebSocket Server sẽ chạy trên port 1500
-- Truy cập `ws://localhost:1500` để kết nối WebSocket
+- HTTP Server sẽ chạy trên port 1499
+- Truy cập `http://localhost:1499` để xem giao diện web
+- API endpoints: `http://localhost:1499/api/ip` và `http://localhost:1499/api/config`
 - Kiểm tra logs: `docker-compose logs -f autoupdateip`
 
 ### 4. Quản lý container
@@ -81,9 +82,10 @@ docker-compose up --build -d
 - Container sẽ tự động restart nếu bị crash
 - Config file được mount từ host, có thể chỉnh sửa mà không cần rebuild image
 - Logs được lưu trong thư mục `logs/` (nếu có)
-- Health check sẽ kiểm tra WebSocket server mỗi 30 giây
+- Health check sẽ kiểm tra HTTP server mỗi 30 giây
 - Giao diện web có logo từ thư mục `asset/media/`
 - Static files được phục vụ từ thư mục `public/`
+- Web UI sử dụng HTTP polling để cập nhật IP realtime
 
 ## 📁 Cấu trúc project
 

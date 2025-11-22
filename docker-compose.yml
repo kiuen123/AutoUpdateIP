@@ -7,7 +7,6 @@ services:
     restart: unless-stopped
     ports:
       - "1499:1499" # HTTP Server port
-      - "1500:1500" # WebSocket Server port
     volumes:
       # Mount config directory để có thể chỉnh sửa config từ bên ngoài
       - ./asset/config:/app/asset/config
@@ -20,13 +19,7 @@ services:
       - autoupdateip-network
     # Health check
     healthcheck:
-      test:
-        [
-          "CMD",
-          "node",
-          "-e",
-          "const ws = require('ws'); const client = new ws('ws://localhost:1500'); client.on('open', () => { client.close(); process.exit(0); }); client.on('error', () => process.exit(1));",
-        ]
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:1499/api/ip"]
       interval: 30s
       timeout: 10s
       retries: 3

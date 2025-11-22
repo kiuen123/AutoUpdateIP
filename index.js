@@ -1,4 +1,3 @@
-import { WebSocketServer } from "ws";
 import { checkConnection } from "./components/CheckConnection.js";
 import { getNewIPAddress } from "./components/GetNewIPAddress.js";
 import { getConfig } from "./components/GetConfig.js";
@@ -14,9 +13,7 @@ let configData = null; // config data
 let newIP = null; // new IP
 let updateIntervalMinutes = 5; // thời gian update IP (phút)
 const updateIntervalMs = 60 * 1000 * updateIntervalMinutes; // đổi phút sang mili giây
-const wsPort = 1500; // cổng WebSocket Server
 const httpPort = 1499; // cổng HTTP Server
-const wss = new WebSocketServer({ port: wsPort }); // tạo WebSocket Server
 
 // Tạo Express app để phục vụ trang web
 const app = express();
@@ -44,17 +41,12 @@ app.get('/api/ip', (req, res) => {
 
 // Khởi động HTTP server
 app.listen(httpPort, () => {
-	// console.log(`HTTP Server is running on http://localhost:${httpPort}`);
+	console.log(`HTTP Server is running on http://localhost:${httpPort}`);
 });
 
 const main = async () => {
 	do {
 		try {
-			console.clear();
-			// console.log('-'.repeat(process.stdout.columns));
-			// console.log(`WebSocket Server is running on ws://localhost:${wsPort}`);
-			// console.log(`HTTP Server is running on http://localhost:${httpPort}`);
-			// console.log('Current IP:', newIP || 'Not available yet');
 			// get configuration
 			await getConfig()
 				.then(async (config) => {
@@ -94,32 +86,3 @@ const main = async () => {
 };
 
 main();
-
-// Create WebSocket Server and send ip address to client
-wss.on("connection", (ws) => {
-	// console.log('New WebSocket connection established');
-
-	const sendThisIP = async () => {
-		try {
-			const data = {
-				IP: newIP,
-			};
-			ws.send(JSON.stringify(data));
-			// console.log('Sent IP to client:', newIP);
-		} catch (error) {
-			console.error('Error sending IP to client:', error);
-		}
-	};
-
-	// Gửi IP ngay lập tức khi có kết nối mới
-	if (newIP) {
-		sendThisIP();
-	}
-
-	const interval = setInterval(sendThisIP, updateIntervalMs); // gửi IP mỗi 5 phút
-
-	ws.on("close", () => {
-		// console.log('WebSocket connection closed');
-		clearInterval(interval);
-	});
-});

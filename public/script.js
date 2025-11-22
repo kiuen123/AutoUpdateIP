@@ -1,46 +1,27 @@
-let ws = null;
-let reconnectInterval = null;
 let currentIP = null;
+let pollingInterval = null;
 
-function connectWebSocket() {
+async function fetchIP() {
     try {
-        ws = new WebSocket("ws://localhost:1500");
-
-        ws.onopen = function () {
-            // console.log("WebSocket connected");
+        const response = await fetch("/api/ip");
+        const data = await response.json();
+        if (data.IP) {
+            currentIP = data.IP;
+            updateIP(data.IP);
+            updateLastUpdate();
             updateConnectionStatus(true);
-            clearInterval(reconnectInterval);
-        };
-
-        ws.onmessage = function (event) {
-            try {
-                const data = JSON.parse(event.data);
-                if (data.IP) {
-                    currentIP = data.IP;
-                    updateIP(data.IP);
-                    updateLastUpdate();
-                }
-            } catch (error) {
-                console.error("Error parsing WebSocket data:", error);
-            }
-        };
-
-        ws.onclose = function () {
-            // console.log("WebSocket disconnected");
-            updateConnectionStatus(false);
-            // Tự động kết nối lại sau 5 giây
-            reconnectInterval = setInterval(connectWebSocket, 5000);
-        };
-
-        ws.onerror = function (error) {
-            console.error("WebSocket error:", error);
-            updateConnectionStatus(false);
-        };
+        }
     } catch (error) {
-        console.error("Failed to connect WebSocket:", error);
+        console.error("Error fetching IP:", error);
         updateConnectionStatus(false);
-        reconnectInterval = setInterval(connectWebSocket, 5000);
     }
+}
+
+function startPolling() {
+    // Lấy IP ngay lập tức
+    fetchIP();
+    // Sau đó poll mỗi 5 giây
+    pollingInterval = setInterval(fetchIP, 5000);
 }
 
 function updateIP(ip) {
@@ -73,17 +54,14 @@ function updateLastUpdate() {
 }
 
 function refreshConnection() {
-    if (ws) {
-        ws.close();
-    }
-    clearInterval(reconnectInterval);
+    clearInterval(pollingInterval);
 
     // Hiển thị trạng thái đang kết nối
     const statusElement = document.getElementById("connection-status");
     statusElement.className = "status disconnected";
     statusElement.innerHTML = '<div class="status-dot"></div><span>Đang kết nối lại...</span>';
 
-    setTimeout(connectWebSocket, 1000);
+    setTimeout(startPolling, 1000);
 }
 
 // Lấy thông tin config để hiển thị số domains
@@ -100,15 +78,15 @@ async function loadDomainCount() {
     }
 }
 
-// Khởi tạo kết nối khi trang load
+// Khởi tạo khi trang load
 window.addEventListener("load", function () {
-    connectWebSocket();
+    startPolling();
     loadDomainCount();
 });
 
 // Xử lý khi tab/window bị ẩn và hiện lại
 document.addEventListener("visibilitychange", function () {
-    if (!document.hidden && (!ws || ws.readyState !== WebSocket.OPEN)) {
+    if (!document.hidden) {
         refreshConnection();
     }
 });
